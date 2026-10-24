@@ -33,6 +33,15 @@ def main():
             # Invoke the LangGraph app
             final_state = app.invoke(initial_state)
 
+            # Accumulate token metrics returned or estimated from execution
+            total_input_tokens += final_state.get("input_tokens", 150)
+            total_output_tokens += final_state.get("output_tokens", 50)
+
+            time.sleep(4)
+
+    project_root = os.path.join(os.path.dirname(csv_path), "..")
+    generate_usage_report(project_root, total_rows, total_input_tokens, total_output_tokens)
+
             # Print or capture results to write to your output.csv later
             # print(f"Status: {final_state.get('deletion_status', 'UNKNOWN')}")
 
