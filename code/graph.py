@@ -5,6 +5,7 @@ from code.nodes.identity_node import identity_node
 from code.nodes.remediation_node import remediation_node
 from code.nodes.router_node import router_node
 from code.nodes.verification_node import verification_node
+from code.nodes.output_node import output_node
 
 
 def is_applicable(state: AuditState):
@@ -20,6 +21,7 @@ builder.add_node("identity_node", identity_node)
 builder.add_node("audit_node", audit_node)
 builder.add_node("remediation_node", remediation_node)
 builder.add_node("verification_node", verification_node)
+builder.add_node("output_node", output_node)
 
 
 builder.add_edge(START,'router_node')
@@ -35,7 +37,8 @@ builder.add_edge('router_node', 'identity_node')
 builder.add_edge('identity_node', 'audit_node')
 builder.add_edge('audit_node', 'remediation_node')
 builder.add_edge('remediation_node', 'verification_node')
-builder.add_edge('verification_node', END)
+builder.add_edge('verification_node', 'output_node')
+builder.add_edge('output_node', END)
 
 app = builder.compile()
 
