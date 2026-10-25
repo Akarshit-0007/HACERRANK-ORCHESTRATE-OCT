@@ -3,6 +3,7 @@ import json
 import os
 import re
 import sys
+import time
 import pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -57,6 +58,7 @@ def write_output_csv(base_dir: str, states):
 
 
 def main():
+    started_at = time.perf_counter()
     base_dir = get_base_dir()
     csv_path = os.path.join(base_dir, "dataset", "deletion_requests.csv")
     output_path = os.path.join(base_dir, "output.csv")
@@ -96,7 +98,8 @@ def main():
         processed_states.append(result_state)
 
     write_output_csv(base_dir, processed_states)
-    generate_usage_report(base_dir, total_rows)
+    elapsed_seconds = time.perf_counter() - started_at
+    generate_usage_report(base_dir, total_rows, elapsed_seconds)
 
     print("\n--- Pipeline Execution & Report Generation Complete ---")
 

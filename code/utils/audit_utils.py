@@ -232,6 +232,8 @@ def _request_authorizes_deletion(request_text: str) -> bool:
     if not request_text:
         return False
     text = request_text.lower()
+    if re.search(r"\b(?:do not|don't|never|not)\s+(?:delete|deletion|remove|erase|purge)\b", text):
+        return False
     if any(token in text for token in ["delete", "deletion", "remove", "erase", "close account", "close my account", "destroy", "purge", "delete my account", "erase my account", "remove my profile"]):
         non_delete_tokens = ["access", "download", "export my data", "export data", "update", "correct", "marketing opt", "opt out", "support request", "billing", "invoice"]
         if any(token in text for token in non_delete_tokens):
