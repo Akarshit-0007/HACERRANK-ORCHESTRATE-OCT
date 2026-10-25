@@ -43,5 +43,5 @@ builder.add_edge('output_node', END)
 
 app = builder.compile()
 
-with open("graph_visualization.png", "wb") as f:
-    f.write(app.get_graph().draw_mermaid_png())
+# with open("graph_visualization.png", "wb") as f:
+#     f.write(app.get_graph().draw_mermaid_png())

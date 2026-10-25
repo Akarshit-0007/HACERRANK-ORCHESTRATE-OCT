@@ -1,4 +1,5 @@
 from code.model.state import AuditState
+from code.utils.identity_utils import resolve_user_identity
 
 
 def identity_node(state: AuditState):
