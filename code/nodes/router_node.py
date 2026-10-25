@@ -6,7 +6,6 @@ def router_node(state: AuditState) -> AuditState:
     Validates initial request parameters and sets validation flags.
     """
     case_id = state.get("case_id")
-    request_text = state.get("request_text", "")
 
     # Check if the case_id is missing or the request text is completely empty
     if not case_id or not str(case_id).strip():
