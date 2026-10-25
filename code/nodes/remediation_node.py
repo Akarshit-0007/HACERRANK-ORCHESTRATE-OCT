@@ -1,5 +1,4 @@
 from code.model.state import AuditState
-from code.nodes.audit_node import audit_node
 
 
 def remediation_node(state: AuditState):
@@ -10,7 +9,6 @@ def remediation_node(state: AuditState):
     """
 
     case_id = state['case_id']
-    deletion_status = state['deletion_status']
     audit_findings = state.get('audit_findings', [])
 
     steps = parse_steps_json(state.get("steps_json", []))
