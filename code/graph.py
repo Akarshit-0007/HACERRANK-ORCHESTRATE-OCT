@@ -8,10 +8,12 @@ from code.nodes.verification_node import verification_node
 from code.nodes.output_node import output_node
 
 
-def is_applicable(state: AuditState):
+def is_applicable(state: AuditState) -> str:
+    """
+    Conditional routing function that reads the flag set by router_node.
+    """
     if state.get("is_invalid", False):
         return END
-
     return "identity_node"
 
 builder = StateGraph(AuditState)
@@ -33,7 +35,6 @@ builder.add_conditional_edges(
         END: END                     # Stops processing and exits directly to END
     }
 )
-builder.add_edge('router_node', 'identity_node')
 builder.add_edge('identity_node', 'audit_node')
 builder.add_edge('audit_node', 'remediation_node')
 builder.add_edge('remediation_node', 'verification_node')

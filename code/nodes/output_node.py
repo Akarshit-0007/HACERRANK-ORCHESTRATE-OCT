@@ -1,22 +1,25 @@
 import csv
+import json
 import os
-
 from code.model.state import AuditState
 
 
 def output_node(state: AuditState):
     """
     Appends final results matching the exact required schema: case_id, deletion_status, steps_json.
-    :param state:
-    :return:
     """
+    # Must be at the repository root per challenge evaluation rules
+    output_path = "output.csv"
 
-    output_path =r"dataset\output.csv"
+    # Fix: Use dict.get() instead of tuple indexing
+    steps = state.get("steps_json", [])
+    if not isinstance(steps, str):
+        steps = json.dumps(steps)
 
     row_data = {
         "case_id": state["case_id"],
-        "deletion_status": state["deletion_status", "PENDING"],
-        "steps_json": state["steps_json", "[]"]
+        "deletion_status": state.get("deletion_status", "PENDING"),
+        "steps_json": steps
     }
 
     file_exists = os.path.isfile(output_path)

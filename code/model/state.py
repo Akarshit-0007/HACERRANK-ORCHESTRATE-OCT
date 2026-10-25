@@ -8,6 +8,8 @@ class AuditState(TypedDict):
     reported_status: str
     request_text: str
 
+    is_invalid: bool
+
     # 2. Identity Resolution Output (populated by identity_node)
     user_id: Optional[str]
     resolved_emails: List[str]          # Current email + all historical email aliases
