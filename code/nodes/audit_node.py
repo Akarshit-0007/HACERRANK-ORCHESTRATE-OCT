@@ -1,37 +1,30 @@
 from code.model.state import AuditState
-from code.utils.audit_utils import (
-    get_evidence_paths,
-    parse_steps_json,
-    scan_evidence_directories
-)
+from code.utils.audit_utils import scan_evidence_for_case
 
-
-def audit_node(state: AuditState):
+def audit_node(state: AuditState) -> AuditState:
     """
-    LangGraph node for auditing evidence directories based on case ID.
+    Audit node wrapper that delegates evidence scanning to utility functions.
     """
-    case_id = state.get("case_id")
+    case_id = state.get("case_id", "")
+    email = state.get("email", "")
 
-    # Get paths and parse steps using utility functions
-    evidence_paths = get_evidence_paths()
-    steps = parse_steps_json(state.get("steps_json", []))
+    print(f"Audit Node: Scanning evidence for Case ID: {case_id}")
 
-    step_num = len(steps) + 1
+    # Call the utility function
+    deletion_status, findings = scan_evidence_for_case(case_id, email)
 
-    # Scan evidence using utility
-    audit_findings = scan_evidence_directories(case_id, evidence_paths)
-
-    # Append structured audit step
-    steps.append({
-        "step_number": step_num,
-        "action": f"Audited evidence directories for case {case_id}",
-        "evidence_id": audit_findings[0]["evidence_id"] if audit_findings else ""
-    })
-
-    # Update state fields
-    state["audit_findings"] = audit_findings
-    state["steps_json"] = steps
-    state["deletion_status"] = "COMPLETE" if audit_findings else "INCOMPLETE"
-    state["has_active_sync_risk"] = False
+    state["deletion_status"] = deletion_status
+    state["steps_json"] = [
+        {
+            "step_number": 1,
+            "action": f"Audited evidence directories for case {case_id}",
+            "findings": findings
+        },
+        {
+            "step_number": 2,
+            "action": "Confirm zero-state compliance and verify no residual artifacts exist",
+            "status": deletion_status
+        }
+    ]
 
     return state
